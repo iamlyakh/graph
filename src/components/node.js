@@ -2,7 +2,7 @@ import React from 'react';
 
 class Node extends React.Component {
     _mouseDownHandler(e) {
-        this.props.startDrag(e, this.props.data);
+        this.props.startDrag(e, this.props.node.id);
     }
     _mouseUpHandler() {
         this.props.stopDrag();
@@ -12,12 +12,15 @@ class Node extends React.Component {
             <div
                 className="node"
                 style = {{
-                    left: this.props.data.left,
-                    top: this.props.data.top
+                    left: this.props.node.left,
+                    top: this.props.node.top
                 }}
                 onMouseDown={::this._mouseDownHandler}
                 onMouseUp={::this._mouseUpHandler}
             >
+                {
+                    this.props.node.name
+                }
             </div>
         )
     }
