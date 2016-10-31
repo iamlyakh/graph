@@ -18,7 +18,7 @@ class Graph extends React.Component {
             const deltaY = this.state.prevY - e.clientY;
 
             const nodes = this.state.nodes.map(node => {
-                if (node.id = this.state.draggingNode.id) {
+                if (node.id === this.state.draggingNode.id) {
                     return {
                         ...node,
                         ...{
@@ -61,6 +61,7 @@ class Graph extends React.Component {
                 onMouseMove={::this._mouseMoveHandler}
             >
                 <Node data={this.state.nodes[0]} startDrag={::this.startDrag} stopDrag={::this.stopDrag} />
+                <Node data={this.state.nodes[1]} startDrag={::this.startDrag} stopDrag={::this.stopDrag} />
             </div>
         )
     }
