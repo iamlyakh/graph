@@ -1,14 +1,13 @@
 import React from 'react';
 import Node from './node';
 
-class Graph extends React.Component {
+class GraphComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             draggingNode: null,
             prevX: null,
-            prevY: null,
-            nodes: [...props.nodes]
+            prevY: null
         };
     }
 
@@ -17,30 +16,19 @@ class Graph extends React.Component {
             const deltaX = this.state.prevX - e.clientX;
             const deltaY = this.state.prevY - e.clientY;
 
-            const nodes = this.state.nodes.map(node => {
-                if (node.id === this.state.draggingNode.id) {
-                    return {
-                        ...node,
-                        ...{
-                            left: node.left - deltaX,
-                            top: node.top - deltaY
-                        }
-                    }
-                }
-                return node;
-            });
+            const draggingNode = this.props.graph.getNodeById(this.state.draggingNode);
+            this.props.graph.setPosition(draggingNode.id, draggingNode.left - deltaX, draggingNode.top - deltaY);
 
             this.setState({
-                nodes: nodes,
                 prevX: e.clientX,
                 prevY: e.clientY
             })
         }
     }
 
-    startDrag(e, node) {
+    startDrag(e, nodeId) {
         this.setState({
-            draggingNode: node,
+            draggingNode: nodeId,
             prevX: e.clientX,
             prevY: e.clientY
         })
@@ -60,11 +48,17 @@ class Graph extends React.Component {
                 className="graph"
                 onMouseMove={::this._mouseMoveHandler}
             >
-                <Node data={this.state.nodes[0]} startDrag={::this.startDrag} stopDrag={::this.stopDrag} />
-                <Node data={this.state.nodes[1]} startDrag={::this.startDrag} stopDrag={::this.stopDrag} />
+                {
+                    this.props.graph.nodes.map(node => {
+                        return <Node
+                                node={node}
+                                startDrag={::this.startDrag}
+                                stopDrag={::this.stopDrag}/>
+                    })
+                }
             </div>
         )
     }
 }
 
-export default Graph;
+export default GraphComponent;
