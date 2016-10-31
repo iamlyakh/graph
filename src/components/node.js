@@ -1,10 +1,10 @@
 import React from 'react';
 
 class Node extends React.Component {
-    _handlerMouseDown(e) {
+    _mouseDownHandler(e) {
         this.props.startDrag(e, this.props.data);
     }
-    _handlerMouseUp() {
+    _mouseUpHandler() {
         this.props.stopDrag();
     }
     render() {
@@ -15,8 +15,8 @@ class Node extends React.Component {
                     left: this.props.data.left,
                     top: this.props.data.top
                 }}
-                onMouseDown={::this._handlerMouseDown}
-                onMouseUp={::this._handlerMouseUp}
+                onMouseDown={::this._mouseDownHandler}
+                onMouseUp={::this._mouseUpHandler}
             >
             </div>
         )
