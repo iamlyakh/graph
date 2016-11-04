@@ -7,7 +7,7 @@ export default class Graph {
 			this.nodes.push(this.createNode('root'));
 		}
 
-		this._updateStructure();
+		this._update();
 	}
 
 	insertNode(parentId, name) {
@@ -18,12 +18,11 @@ export default class Graph {
 		newNode.parents.add(parentNode.id);
 		this.nodes.push(newNode);
 
-		this._updateStructure();
+		this._update();
 	}
 
 	deleteNodeHard(id) {
 		const deletedNode = this.getNodeById(id);
-		const deletedNodeIndex = this.getNodeIndexById(id);
 
 		if (deletedNode.parents.size === 0) {
 			throw Error('You can\'t delete root element');
@@ -39,14 +38,15 @@ export default class Graph {
 			parent.children.delete(id);
 		});
 
-		this.nodes.splice(deletedNodeIndex, 1);
+		this.nodes = this.nodes.filter(node => id !== node.id);
 
-		this._updateStructure();
+		this._update();
+
+		return this.nodes;
 	}
 
 	deleteNodeSoft(id) {
 		const deletedNode = this.getNodeById(id);
-		const deletedNodeIndex = this.getNodeIndexById(id);
 
 		if (deletedNode.parents.size === 0) {
 			throw Error('You can\'t delete root element');
@@ -70,9 +70,11 @@ export default class Graph {
 			})
 		});
 
-		this.nodes.splice(deletedNodeIndex, 1);
+		this.nodes = [...this.nodes.filter(node => id !== node.id)];
 
-		this._updateStructure();
+		this._update();
+
+		return this.nodes;
 	}
 
 	createNode(name) {
@@ -102,53 +104,47 @@ export default class Graph {
 		return this.nodes.find(node => node.id === id);
 	}
 
-	getNodeIndexById(id) {
-		let result = -1;
-
-		for (let i = 0; i < this.nodes.length; i++) {
-			if (this.nodes[i].id === id) {
-				result = i;
-				break;
-			}
-		}
-
-		return result;
-	}
-
 	getRootNode() {
 		return this.nodes.find(node => node.parents.size === 0);
 	}
 
-	_updateStructure() {
+	_update() {
 		const rootNode = this.getRootNode();
-		const startLevel = 0;
-		this.structure = [];
+		const rootLeft = (window.innerWidth - rootNode.width)/2;
 
-		this.walkDown(rootNode.id, startLevel, (nodeId, level) => {
-			if (!this.structure[level]) {
-				this.structure[level] = [];
-			}
-
-			this.structure[level].push(nodeId);
-		});
-
-		this._calculatePositions();
+		this._calculateColumnWidth(rootNode.id);
+		this._calculatePositions(rootNode.id, rootLeft, 100);
 	}
 
-	_calculatePositions() {
-		this.structure.forEach((nodeIds,level) => {
+	_calculatePositions(nodeId, left, top) {
+		const node = this.getNodeById(nodeId);
+		node.left = left + node.width/2;
+		node.top = top;
 
+		let childLeft = left;
+		let childTop = top + 100;
+		node.children.forEach(childId => {
+			const childNode = this.getNodeById(childId);
+			this._calculatePositions(childId, childLeft, childTop);
+			childLeft += childNode.width;
+		});
+	}
 
-			const horizontalMargin = window.innerWidth/(nodeIds.length + 1);
-			const verticalMargin = 100;
+	_calculateColumnWidth(nodeId) {
+		const curNode = this.getNodeById(nodeId);
+		curNode.width = 0;
 
-			nodeIds.forEach((nodeId, i) => {
-				const node = this.getNodeById(nodeId);
+		if (curNode.children.size === 0) {
+			curNode.width = 100;
+			return 100;
+		} else {
+			curNode.children.forEach(childId => {
+				this._calculateColumnWidth(childId);
+				const child = this.getNodeById(childId);
 
-				node.left = horizontalMargin * (i + 1);
-				node.top = verticalMargin * (level + 1);
-			});
-		})
+				curNode.width += child.width;
+			})
+		}
 	}
 
 	setPosition(id, x, y) {
@@ -156,15 +152,5 @@ export default class Graph {
 
 		node.left = x;
 		node.top = y;
-	}
-
-	walkDown(nodeId, level, callback) {
-		const curNode = this.getNodeById(nodeId);
-
-		callback(nodeId, level);
-
-		curNode.children.forEach(childId => {
-			this.walkDown(childId, level + 1, callback);
-		})
 	}
 }
