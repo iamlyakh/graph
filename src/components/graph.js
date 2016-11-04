@@ -1,22 +1,23 @@
 import React from 'react';
 import Node from './node';
+import Line from './line';
 
 class GraphComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            draggingNode: null,
+            draggingNodeId: null,
             prevX: null,
             prevY: null
         };
     }
 
     _mouseMoveHandler(e) {
-        if (this.state.draggingNode) {
+        if (this.state.draggingNodeId) {
             const deltaX = this.state.prevX - e.clientX;
             const deltaY = this.state.prevY - e.clientY;
 
-            const draggingNode = this.props.graph.getNodeById(this.state.draggingNode);
+            const draggingNode = this.props.graph.getNodeById(this.state.draggingNodeId);
             this.props.graph.setPosition(draggingNode.id, draggingNode.left - deltaX, draggingNode.top - deltaY);
 
             this.setState({
@@ -28,7 +29,7 @@ class GraphComponent extends React.Component {
 
     startDrag(e, nodeId) {
         this.setState({
-            draggingNode: nodeId,
+            draggingNodeId: nodeId,
             prevX: e.clientX,
             prevY: e.clientY
         })
@@ -36,10 +37,20 @@ class GraphComponent extends React.Component {
 
     stopDrag() {
         this.setState({
-            draggingNode: null,
+            draggingNodeId: null,
             prevX: null,
             prevY: null
         })
+    }
+
+    renderLines(node) {
+        let lines = [];
+
+        node.children.forEach(childId => {
+            lines.push(<Line key={'' + node.id + childId} from={node} to={this.props.graph.getNodeById(childId)}/>);
+        });
+
+        return lines;
     }
 
     render() {
@@ -51,11 +62,20 @@ class GraphComponent extends React.Component {
                 {
                     this.props.graph.nodes.map(node => {
                         return <Node
+                                key={node.id}
                                 node={node}
                                 startDrag={::this.startDrag}
-                                stopDrag={::this.stopDrag}/>
+                                stopDrag={::this.stopDrag}
+                        />
                     })
                 }
+
+                {
+                    this.props.graph.nodes.map(node => {
+                        return this.renderLines(node)
+                    })
+                }
+
             </div>
         )
     }
