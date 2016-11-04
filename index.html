@@ -3,12 +3,14 @@
 <head>
 	<meta charset="UTF-8">
 	<title>ES6</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<style>
 		html, body {
 			height: 100%;
 			position: relative;
 			margin: 0;
 			padding: 0;
+			font-family: 'Roboto', sans-serif;
 		}
 		#app {
 			height: 100%;
@@ -21,16 +23,21 @@
 			position: absolute;
 		}
 		.node {
+			color: #fff;
 			width: 50px;
 			height: 50px;
-			background: #fff;
+			background: #009688;
 			border-radius: 50%;
-			border: 1px solid #d0d0d0;
 			text-align: center;
 			line-height: 50px;
 			user-select: none;
 			cursor: pointer;
 			z-index: 10;
+			transition: box-shadow 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+			box-shadow: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px
+		}
+		.node_dragging {
+			box-shadow: rgba(0, 0, 0, 0.186863) 0px 10px 30px, rgba(0, 0, 0, 0.227451) 0px 6px 10px
 		}
 		.line {
 			background: #d0d0d0;
