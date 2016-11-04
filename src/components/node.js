@@ -13,11 +13,25 @@ class Node extends React.Component {
             dragging: true
         });
     }
-    _mouseUpHandler() {
+    _mouseUpHandler(e) {
         this.props.stopDrag();
         this.setState({
             dragging: false
         });
+
+		const nodeId = this.props.node.id;
+
+		if (e.altKey) {
+			this.props.insertNode(nodeId);
+		}
+
+		if (e.ctrlKey) {
+			this.props.deleteNodeHard(nodeId);
+		}
+
+		if (e.shiftKey) {
+			this.props.deleteNodeSoft(nodeId);
+		}
     }
 	getColor() {
 		const count = this.props.colors.length;

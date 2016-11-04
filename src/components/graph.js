@@ -43,6 +43,21 @@ class GraphComponent extends React.Component {
         })
     }
 
+    deleteNodeSoft(id) {
+		this.props.graph.deleteNodeSoft(id);
+		this.setState({});
+	}
+
+	deleteNodeHard(id) {
+		this.props.graph.deleteNodeHard(id);
+		this.setState({});
+	}
+
+	insertNode(parentId) {
+		this.props.graph.insertNode(parentId, '');
+		this.setState({});
+	}
+
     renderLines(node) {
         let lines = [];
 
@@ -66,6 +81,9 @@ class GraphComponent extends React.Component {
                                 node={node}
                                 startDrag={::this.startDrag}
                                 stopDrag={::this.stopDrag}
+								deleteNodeSoft={::this.deleteNodeSoft}
+								deleteNodeHard={::this.deleteNodeHard}
+								insertNode={::this.insertNode}
                                 colors={this.props.colors}
                         />
                     })
