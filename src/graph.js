@@ -1,10 +1,9 @@
 export default class Graph {
 	constructor(nodes) {
 		this.nodes = nodes || [];
-		this.structure = [];
 
 		if (this.nodes.length === 0) {
-			this.nodes.push(this.createNode('root'));
+			this.nodes.push(this.createNode(''));
 		}
 
 		this._update();
@@ -83,6 +82,7 @@ export default class Graph {
 			name: name,
 			left: 0,
 			top: 0,
+			width: 0,
 			children: new Set(),
 			parents: new Set()
 		}
@@ -123,7 +123,7 @@ export default class Graph {
 		node.top = top;
 
 		let childLeft = left;
-		let childTop = top + 130;
+		let childTop = top + 120;
 		node.children.forEach(childId => {
 			const childNode = this.getNodeById(childId);
 			this._calculatePositions(childId, childLeft, childTop);
@@ -136,8 +136,8 @@ export default class Graph {
 		curNode.width = 0;
 
 		if (curNode.children.size === 0) {
-			curNode.width = 100;
-			return 100;
+			curNode.width = 80;
+			return 80;
 		} else {
 			curNode.children.forEach(childId => {
 				this._calculateColumnWidth(childId);

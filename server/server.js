@@ -7,12 +7,13 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../webpack.config';
 
 const app = new Express();
-const port = 3000;
+const port = 3001;
 
 // Use this middleware to set up hot module reloading via webpack.
 const compiler = webpack(webpackConfig);
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: webpackConfig.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
+app.use(Express.static('src/styles'));
 
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname, '../index.html'))
