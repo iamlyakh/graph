@@ -2,15 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import GraphComponent from './components/graph';
 import Graph from './graph';
-import nodes from './db';
+import colors from './colors';
 
 const graph = new Graph();
-graph.insertNode(1, 'node1');
-graph.insertNode(2, 'node2');
-graph.insertNode(2, 'node3');
-graph.insertNode(2, 'node4');
-graph.insertNode(1, 'node5');
+graph.insertNode(1, '');
+graph.insertNode(1, '');
+graph.insertNode(3, '');
+graph.insertNode(3, '');
+graph.insertNode(2, '');
+graph.insertNode(2, '');
+graph.insertNode(2, '');
+graph.insertNode(7, '');
+graph.insertNode(7, '');
 
-console.log(graph);
-
-ReactDOM.render(<GraphComponent graph={graph} />, document.getElementById('app'));
+ReactDOM.render(<GraphComponent graph={graph} colors={colors}/>, document.getElementById('app'));

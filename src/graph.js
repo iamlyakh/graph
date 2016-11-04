@@ -114,15 +114,16 @@ export default class Graph {
 
 		this._calculateColumnWidth(rootNode.id);
 		this._calculatePositions(rootNode.id, rootLeft, 100);
+		this._calculateLevel(rootNode.id, 0);
 	}
 
 	_calculatePositions(nodeId, left, top) {
 		const node = this.getNodeById(nodeId);
-		node.left = left + node.width/2;
+		node.left = left + node.width/2 - 50;
 		node.top = top;
 
 		let childLeft = left;
-		let childTop = top + 100;
+		let childTop = top + 130;
 		node.children.forEach(childId => {
 			const childNode = this.getNodeById(childId);
 			this._calculatePositions(childId, childLeft, childTop);
@@ -145,6 +146,15 @@ export default class Graph {
 				curNode.width += child.width;
 			})
 		}
+	}
+
+	_calculateLevel(nodeId, level) {
+		const node = this.getNodeById(nodeId);
+		node.level = level;
+
+		node.children.forEach(childId => {
+			this._calculateLevel(childId, level + 1);
+		});
 	}
 
 	setPosition(id, x, y) {

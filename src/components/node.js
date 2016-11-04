@@ -19,13 +19,20 @@ class Node extends React.Component {
             dragging: false
         });
     }
+	getColor() {
+		const count = this.props.colors.length;
+		const level = this.props.node.level;
+
+		return this.props.colors[level % count];
+	}
     render() {
         return (
             <div
                 className={'node ' + (this.state.dragging ? 'node_dragging' : '')}
                 style = {{
                     left: this.props.node.left,
-                    top: this.props.node.top
+                    top: this.props.node.top,
+					background: this.getColor()
                 }}
                 onMouseDown={::this._mouseDownHandler}
                 onMouseUp={::this._mouseUpHandler}

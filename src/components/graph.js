@@ -66,6 +66,7 @@ class GraphComponent extends React.Component {
                                 node={node}
                                 startDrag={::this.startDrag}
                                 stopDrag={::this.stopDrag}
+                                colors={this.props.colors}
                         />
                     })
                 }
